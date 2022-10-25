@@ -9,7 +9,7 @@ function Login() {
 
   setTimeout(() => {
     setLoginClass('loginStill');
-  }, 2000);
+  }, 1500);
 
   return (
     <div className={loginClass}>
