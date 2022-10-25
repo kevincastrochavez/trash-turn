@@ -1,0 +1,27 @@
+.loginStart {
+  transform: translateY(200px);
+
+  &__icon {
+    display: flex;
+    justify-content: center;
+
+    & svg {
+      font-size: 200px;
+    }
+  }
+}
+
+.loginStill {
+  transform: translateY(0%);
+  transition: transform 2s ease-in-out;
+
+  &__loginInfo {
+    display: grid;
+    gap: 24px;
+    margin-top: 96px;
+
+    & button {
+      margin-top: 56px;
+    }
+  }
+}
