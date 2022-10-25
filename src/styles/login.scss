@@ -9,13 +9,18 @@
       font-size: 200px;
     }
   }
+
+  .loginStill__loginInfo {
+    display: none;
+  }
 }
 
 .loginStill {
   transform: translateY(0%);
-  transition: transform 2s ease-in-out;
+  transition: transform 1.5s ease-in-out;
 
   &__loginInfo {
+    transition: display 2s ease-in-out;
     display: grid;
     gap: 24px;
     margin-top: 96px;
