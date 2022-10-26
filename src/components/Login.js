@@ -5,19 +5,31 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { useNavigate } from 'react-router-dom';
 
 import { auth, provider } from '../firebase';
+import { useStateValue } from '../StateProvider';
 import Button from '../components/Button';
 
 function Login() {
   const [loginClass, setLoginClass] = useState('loginStart');
+  const [{}, dispatch] = useStateValue();
   const navigate = useNavigate();
 
   setTimeout(() => {
     setLoginClass('loginStill');
-  }, 1500);
+  }, 1000);
 
   const signIn = () => {
     signInWithPopup(auth, provider).then((result) => {
-      console.log(result);
+      const user = {
+        name: result.user.displayName,
+        email: result.user.email,
+        photoUrl: result.user.photoURL,
+      };
+
+      dispatch({
+        type: 'SET_USER',
+        user: user,
+      });
+
       navigate('/rommateInfo');
     });
   };
