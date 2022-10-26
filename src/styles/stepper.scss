@@ -1,0 +1,26 @@
+.stepperInfo {
+  margin-top: 24px;
+
+  &__container {
+    margin-top: 48px;
+
+    &-btns {
+      display: grid;
+      gap: 12px;
+      height: 60vh;
+      overflow: scroll;
+    }
+
+    &-bottom {
+      border-top: 1px solid lightgrey;
+      position: absolute;
+      background-color: #fff;
+      height: 68px;
+      padding: 0 24px;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      padding-top: 0 !important;
+    }
+  }
+}
