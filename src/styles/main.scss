@@ -4,11 +4,22 @@
   box-sizing: border-box;
 }
 
-body {
-  // height: 100vh;
-  // width: 100vw;
-}
-
+@import './variables.scss';
 @import './app.scss';
 @import './header.scss';
 @import './layout.scss';
+@import './login.scss';
+@import './button.scss';
+
+h1,
+h2,
+h3,
+h4,
+a,
+button {
+  font-family: $heading-font;
+}
+
+p {
+  font-family: $paragraph-font;
+}

@@ -1,0 +1,13 @@
+.buttonComponent {
+  padding: 16px 0;
+  height: wrap;
+  border-radius: 8px;
+  border: none;
+  font-size: $p1-size;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
