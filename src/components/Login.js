@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithPopup } from 'firebase/auth';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GoogleIcon from '@mui/icons-material/Google';
-import { auth, provider } from '../firebase';
+import { useNavigate } from 'react-router-dom';
 
+import { auth, provider } from '../firebase';
 import Button from '../components/Button';
 
 function Login() {
   const [loginClass, setLoginClass] = useState('loginStart');
+  const navigate = useNavigate();
 
   setTimeout(() => {
     setLoginClass('loginStill');
@@ -16,6 +18,7 @@ function Login() {
   const signIn = () => {
     signInWithPopup(auth, provider).then((result) => {
       console.log(result);
+      navigate('/rommateInfo');
     });
   };
 
