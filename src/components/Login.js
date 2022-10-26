@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GoogleIcon from '@mui/icons-material/Google';
+import { auth, provider } from '../firebase';
 
 import Button from '../components/Button';
 
@@ -10,6 +12,12 @@ function Login() {
   setTimeout(() => {
     setLoginClass('loginStill');
   }, 1500);
+
+  const signIn = () => {
+    signInWithPopup(auth, provider).then((result) => {
+      console.log(result);
+    });
+  };
 
   return (
     <div className={loginClass}>
@@ -22,7 +30,11 @@ function Login() {
 
         <p>Never take out the trash when you are not supposed to</p>
 
-        <Button Icon={GoogleIcon} text='Sign In with Google' />
+        <Button
+          callback={signIn}
+          Icon={GoogleIcon}
+          text='Sign In with Google'
+        />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Button({ Icon, text }) {
+function Button({ Icon, text, callback }) {
   return (
-    <button className='buttonComponent'>
+    <button onClick={callback && callback} className='buttonComponent'>
       {Icon && <Icon />}
       {text}
     </button>
