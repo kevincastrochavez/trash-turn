@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 
-import { db } from '../firebase';
 import RadioBtn from './RadioBtn';
+import { useStateValue } from '../StateProvider';
 
 const steps = ['Choose your Complex', 'Choose your apartment'];
 
 function StepperInfo() {
-  const [complexes, setComplexes] = useState(null);
+  const [{ complexesList }] = useStateValue();
   const [activeStep, setActiveStep] = useState(0);
-  const [radioBtnActive, setRadioBtnActive] = useState('cedars');
+  const [radioBtnActive, setRadioBtnActive] = useState(complexesList[0].value);
+  const [{ complexChosen }, dispatch] = useStateValue();
+
+  console.log(radioBtnActive);
+  console.log(`Complex chosen from context: ${complexChosen}`);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -25,20 +27,14 @@ function StepperInfo() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  console.log(complexes);
+  const selectRadio = (complex) => {
+    setRadioBtnActive(complex.id);
 
-  useEffect(() => {
-    async function getComplexes() {
-      const complexesSnapshot = await getDocs(collection(db, 'complexes'));
-      const complexesList = complexesSnapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id };
-      });
-
-      setComplexes(complexesList);
-    }
-
-    getComplexes();
-  }, []);
+    dispatch({
+      type: 'SET_COMPLEX_CHOSEN',
+      complex: radioBtnActive,
+    });
+  };
 
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>
@@ -54,9 +50,10 @@ function StepperInfo() {
 
       <div className='stepperInfo__container'>
         <div className='stepperInfo__container-btns'>
-          {complexes &&
-            complexes.map((complex) => (
+          {complexesList &&
+            complexesList.map((complex) => (
               <RadioBtn
+                callback={() => selectRadio(complex)}
                 active={radioBtnActive === complex.value ? true : false}
                 key={complex.value}
                 label={complex.name}

@@ -6,7 +6,6 @@ import Stepper from './Stepper';
 function RoomateInfo() {
   const [{ user }] = useStateValue();
 
-  console.log(user);
   return (
     <div>
       <Stepper />
