@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -7,17 +8,17 @@ import Button from '@mui/material/Button';
 
 import RadioBtn from './RadioBtn';
 import { useStateValue } from '../StateProvider';
+import { db } from '../firebase';
 
 const steps = ['Choose your Complex', 'Choose your apartment'];
 
 function StepperInfo() {
   const [{ complexesList }] = useStateValue();
   const [activeStep, setActiveStep] = useState(0);
+  // Sets the default state to the first complex in the firebase collection
   const [radioBtnActive, setRadioBtnActive] = useState(complexesList[0].value);
   const [{ complexChosen }, dispatch] = useStateValue();
-
-  console.log(radioBtnActive);
-  console.log(`Complex chosen from context: ${complexChosen}`);
+  // const [apartments, setApartments] = useState(null);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -28,14 +29,28 @@ function StepperInfo() {
   };
 
   const selectRadio = (complex) => {
+    // Sets which radio button was selected
     setRadioBtnActive(complex.id);
 
+    // Sends the same radio button to the context layer
     dispatch({
       type: 'SET_COMPLEX_CHOSEN',
       complex: radioBtnActive,
     });
+
+    // getApartments(radioBtnActive);
   };
 
+  // async function getApartments(radioBtnActive) {
+  //   const apartmentsSnapshot = await getDocs(collection(db, radioBtnActive));
+  //   const apartmentsList = apartmentsSnapshot.docs.map((doc) => {
+  //     return { ...doc.data(), id: doc.id };
+  //   });
+
+  //   setApartments(apartmentsList);
+  // }
+
+  // console.log(apartments);
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -50,6 +65,7 @@ function StepperInfo() {
 
       <div className='stepperInfo__container'>
         <div className='stepperInfo__container-btns'>
+          {/* Reders radio buttons based on the collection data fetched from firebase */}
           {complexesList &&
             complexesList.map((complex) => (
               <RadioBtn
