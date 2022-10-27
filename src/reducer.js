@@ -1,8 +1,8 @@
 export const initialState = {
   user: null,
   complexesList: [],
-  complexChosen: null,
-  apartmentChosen: null,
+  complexChosen: '',
+  apartmentChosen: '',
 };
 
 const reducer = (state, action) => {

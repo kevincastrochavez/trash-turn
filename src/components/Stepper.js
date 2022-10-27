@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -17,8 +16,7 @@ function StepperInfo() {
   const [activeStep, setActiveStep] = useState(0);
   // Sets the default state to the first complex in the firebase collection
   const [radioBtnActive, setRadioBtnActive] = useState(complexesList[0].value);
-  const [{ complexChosen }, dispatch] = useStateValue();
-  // const [apartments, setApartments] = useState(null);
+  const [apartments, setApartments] = useState(null);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -30,27 +28,30 @@ function StepperInfo() {
 
   const selectRadio = (complex) => {
     // Sets which radio button was selected
-    setRadioBtnActive(complex.id);
-
-    // Sends the same radio button to the context layer
-    dispatch({
-      type: 'SET_COMPLEX_CHOSEN',
-      complex: radioBtnActive,
-    });
+    setRadioBtnActive(complex.value);
 
     // getApartments(radioBtnActive);
   };
 
-  // async function getApartments(radioBtnActive) {
-  //   const apartmentsSnapshot = await getDocs(collection(db, radioBtnActive));
-  //   const apartmentsList = apartmentsSnapshot.docs.map((doc) => {
-  //     return { ...doc.data(), id: doc.id };
-  //   });
+  useEffect(() => {
+    async function getApartments(complex) {
+      console.log(complex);
 
-  //   setApartments(apartmentsList);
-  // }
+      const apartmentsSnapshot = await db
+        .collection('complexes')
+        .doc(complex)
+        .collection(complex)
+        .get();
+      // const apartmentsSnapshot = await getDocs(collection(db, 'cedars'));
+      const apartmentsList = apartmentsSnapshot.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id };
+      });
+      setApartments(apartmentsList);
+    }
 
-  // console.log(apartments);
+    getApartments(radioBtnActive);
+  }, [radioBtnActive]);
+
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>
       <Stepper activeStep={activeStep} alternativeLabel>

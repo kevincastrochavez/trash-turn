@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { signInWithPopup } from 'firebase/auth';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useNavigate } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
 
 import { auth, provider, db } from '../firebase';
 import { useStateValue } from '../StateProvider';
@@ -23,7 +21,7 @@ function Login() {
   // Gets the complexes from firebase so they are fetched early in the app
   useEffect(() => {
     async function getComplexes() {
-      const complexesSnapshot = await getDocs(collection(db, 'complexes'));
+      const complexesSnapshot = await db.collection('complexes').get();
       const complexesList = complexesSnapshot.docs.map((doc) => {
         return { ...doc.data(), id: doc.id };
       });
@@ -36,7 +34,7 @@ function Login() {
 
   // Signs in user with the Google provider
   const signIn = () => {
-    signInWithPopup(auth, provider).then((result) => {
+    auth.signInWithPopup(provider).then((result) => {
       // Prepares user object to send it
       const user = {
         name: result.user.displayName,
