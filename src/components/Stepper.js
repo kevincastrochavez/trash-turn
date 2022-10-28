@@ -14,9 +14,13 @@ const steps = ['Choose your Complex', 'Choose your apartment'];
 function StepperInfo() {
   const [{ complexesList }] = useStateValue();
   const [activeStep, setActiveStep] = useState(0);
-  // Sets the default state to the first complex in the firebase collection
-  const [radioBtnActive, setRadioBtnActive] = useState(complexesList[0].value);
   const [apartments, setApartments] = useState(null);
+  // Sets the default state to the first complex in the firebase collection
+  const [complexSelected, setComplexSelected] = useState(
+    complexesList[0].value
+  );
+  // Sets the default state to 0 since the apartments haven't been fetched when the component renders, but when complex is selected
+  const [apartmentSelected, setApartmentSelected] = useState(0);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -26,17 +30,18 @@ function StepperInfo() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const selectRadio = (complex) => {
-    // Sets which radio button was selected
-    setRadioBtnActive(complex.value);
+  const selectComplex = (complex) => {
+    // Sets which radio button was selected for complex
+    setComplexSelected(complex.value);
+  };
 
-    // getApartments(radioBtnActive);
+  const selectApartment = (apartment) => {
+    // Sets which radio button was selected for apartment
+    setApartmentSelected(apartment.apt);
   };
 
   useEffect(() => {
     async function getApartments(complex) {
-      console.log(complex);
-
       const apartmentsSnapshot = await db
         .collection('complexes')
         .doc(complex)
@@ -49,8 +54,9 @@ function StepperInfo() {
       setApartments(apartmentsList);
     }
 
-    getApartments(radioBtnActive);
-  }, [radioBtnActive]);
+    getApartments(complexSelected);
+    // This useEffect will run everytime a complex is selected
+  }, [complexSelected]);
 
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>
@@ -66,16 +72,26 @@ function StepperInfo() {
 
       <div className='stepperInfo__container'>
         <div className='stepperInfo__container-btns'>
-          {/* Reders radio buttons based on the collection data fetched from firebase */}
-          {complexesList &&
-            complexesList.map((complex) => (
-              <RadioBtn
-                callback={() => selectRadio(complex)}
-                active={radioBtnActive === complex.value ? true : false}
-                key={complex.value}
-                label={complex.name}
-              />
-            ))}
+          {/* Renders radio buttons based on the collection data fetched from firebase */}
+          {activeStep === 0
+            ? complexesList &&
+              complexesList.map((complex) => (
+                <RadioBtn
+                  callback={() => selectComplex(complex)}
+                  active={complexSelected === complex.value ? true : false}
+                  key={complex.value}
+                  label={complex.name}
+                />
+              ))
+            : apartments &&
+              apartments.map((apartment) => (
+                <RadioBtn
+                  callback={() => selectApartment(apartment)}
+                  active={apartmentSelected === apartment.apt ? true : false}
+                  key={apartment.apt}
+                  label={apartment.apt}
+                />
+              ))}
         </div>
         <Box
           sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
