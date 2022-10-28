@@ -14,7 +14,7 @@ import { db } from '../firebase';
 const steps = ['Choose your Complex', 'Choose your apartment'];
 
 function StepperInfo() {
-  const [{ complexesList }] = useStateValue();
+  const [{ complexesList, user }] = useStateValue();
   const [activeStep, setActiveStep] = useState(0);
   const [apartments, setApartments] = useState(null);
   // Sets the default state to the first complex in the firebase collection
@@ -22,7 +22,7 @@ function StepperInfo() {
     complexesList[0].value
   );
   // Sets the default state to 0 since the apartments haven't been fetched when the component renders, but when complex is selected
-  const [apartmentSelected, setApartmentSelected] = useState(0);
+  const [apartmentSelected, setApartmentSelected] = useState('');
   const [showAlert, setShowAlert] = useState(false);
 
   const handleNext = () => {
@@ -57,10 +57,16 @@ function StepperInfo() {
     setShowAlert(false);
   };
 
-  const submitComplexAndApartment = () => {
+  const submitComplexAndApartment = async () => {
     if (apartmentSelected) {
-      console.log(complexSelected);
-      console.log(apartmentSelected);
+      // Create collection of rommates inside apartment and assign user to it
+      await db
+        .collection('complexes')
+        .doc(complexSelected)
+        .collection(complexSelected)
+        .doc(apartmentSelected)
+        .collection('roomates')
+        .add(user);
     } else {
       // If no apartment was selected, alert will be fired
       setShowAlert(true);
@@ -84,6 +90,8 @@ function StepperInfo() {
     getApartments(complexSelected);
     // This useEffect will run everytime a complex is selected
   }, [complexSelected]);
+
+  console.log(user);
 
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>

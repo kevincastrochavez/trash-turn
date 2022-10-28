@@ -38,8 +38,8 @@ function Login() {
       // Prepares user object to send it
       const user = {
         name: result.user.displayName,
-        email: result.user.email,
         photoUrl: result.user.photoURL,
+        uid: result.user.uid,
       };
 
       // Dispatches user to the context layer
