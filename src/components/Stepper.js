@@ -4,6 +4,8 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 import RadioBtn from './RadioBtn';
 import { useStateValue } from '../StateProvider';
@@ -21,6 +23,7 @@ function StepperInfo() {
   );
   // Sets the default state to 0 since the apartments haven't been fetched when the component renders, but when complex is selected
   const [apartmentSelected, setApartmentSelected] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -40,9 +43,28 @@ function StepperInfo() {
     setApartmentSelected(apartment.apt);
   };
 
+  // Snackbar alert
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+  });
+
+  // Close alert
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShowAlert(false);
+  };
+
   const submitComplexAndApartment = () => {
-    console.log(complexSelected);
-    console.log(apartmentSelected);
+    if (apartmentSelected) {
+      console.log(complexSelected);
+      console.log(apartmentSelected);
+    } else {
+      // If no apartment was selected, alert will be fired
+      setShowAlert(true);
+    }
   };
 
   useEffect(() => {
@@ -98,6 +120,7 @@ function StepperInfo() {
                 />
               ))}
         </div>
+
         <Box
           sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
           className='stepperInfo__container-bottom'
@@ -119,6 +142,20 @@ function StepperInfo() {
           </Button>
         </Box>
       </div>
+
+      <Snackbar
+        open={showAlert}
+        // autoHideDuration={4000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity='warning'
+          sx={{ width: '100%' }}
+        >
+          Please select an apartment from the current complex
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
