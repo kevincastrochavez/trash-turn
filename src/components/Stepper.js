@@ -40,6 +40,11 @@ function StepperInfo() {
     setApartmentSelected(apartment.apt);
   };
 
+  const submitComplexAndApartment = () => {
+    console.log(complexSelected);
+    console.log(apartmentSelected);
+  };
+
   useEffect(() => {
     async function getApartments(complex) {
       const apartmentsSnapshot = await db
@@ -107,7 +112,9 @@ function StepperInfo() {
           </Button>
           <Box sx={{ flex: '1 1 auto' }} />
 
-          <Button onClick={handleNext}>
+          <Button
+            onClick={activeStep !== 1 ? handleNext : submitComplexAndApartment}
+          >
             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
           </Button>
         </Box>
