@@ -19,19 +19,18 @@ import { Modal } from '@mui/material';
 const steps = ['Choose your Complex', 'Choose your apartment'];
 
 function StepperInfo() {
-  const [{ complexesList, user }] = useStateValue();
+  const [{ user }] = useStateValue();
   const [activeStep, setActiveStep] = useState(0);
   const [apartments, setApartments] = useState(null);
   // Sets the default state to the first complex in the firebase collection
-  const [complexSelected, setComplexSelected] = useState(
-    complexesList[0].value
-  );
+  const [complexSelected, setComplexSelected] = useState(0);
   // Sets the default state to 0 since the apartments haven't been fetched when the component renders, but when complex is selected
   const [apartmentSelected, setApartmentSelected] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openComplexModal, setOpenComplexModal] = useState(false);
   const [complexInputValue, setComplexInputValue] = useState('');
+  const [complexes, setComplexes] = useState(null);
   const navigate = useNavigate();
 
   const style = {
@@ -84,7 +83,7 @@ function StepperInfo() {
       .trim()
       .toLowerCase()
       .split(' ')
-      .join('');
+      .join(' ');
 
     await db
       .collection('complexes')
@@ -120,23 +119,49 @@ function StepperInfo() {
     }
   };
 
-  useEffect(() => {
-    async function getApartments(complex) {
-      const apartmentsSnapshot = await db
-        .collection('complexes')
-        .doc(complex)
-        .collection(complex)
-        .get();
-      // const apartmentsSnapshot = await getDocs(collection(db, 'cedars'));
-      const apartmentsList = apartmentsSnapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id };
-      });
-      setApartments(apartmentsList);
+  const capitalizeEachWord = (sentence) => {
+    const words = sentence.split(' ');
+
+    for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].substr(1);
     }
 
-    getApartments(complexSelected);
-    // This useEffect will run everytime a complex is selected
-  }, [complexSelected]);
+    return words.join(' ');
+  };
+
+  useEffect(() => {
+    setLoading(true);
+
+    async function getComplexes() {
+      const complexesSnapshot = await db.collection('complexes').get();
+      const complexesList = complexesSnapshot.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id };
+      });
+
+      setComplexes(complexesList);
+      setLoading(false);
+    }
+
+    getComplexes();
+  }, []);
+
+  // useEffect(() => {
+  //   async function getApartments(complex) {
+  //     const apartmentsSnapshot = await db
+  //       .collection('complexes')
+  //       .doc(complex)
+  //       .collection(complex)
+  //       .get();
+  //     // const apartmentsSnapshot = await getDocs(collection(db, 'cedars'));
+  //     const apartmentsList = apartmentsSnapshot.docs.map((doc) => {
+  //       return { ...doc.data(), id: doc.id };
+  //     });
+  //     setApartments(apartmentsList);
+  //   }
+
+  //   getApartments(complexSelected);
+  //   // This useEffect will run everytime a complex is selected
+  // }, [complexSelected]);
 
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>
@@ -154,13 +179,13 @@ function StepperInfo() {
         <div className='stepperInfo__container-btns'>
           {/* Renders radio buttons based on the collection data fetched from firebase */}
           {activeStep === 0
-            ? complexesList &&
-              complexesList.map((complex) => (
+            ? complexes &&
+              complexes.map((complex) => (
                 <RadioBtn
                   onClick={() => selectComplex(complex)}
                   active={complexSelected === complex.value ? true : false}
                   key={complex.value}
-                  label={complex.name}
+                  label={capitalizeEachWord(complex.name)}
                 />
               ))
             : apartments &&
