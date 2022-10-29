@@ -23,15 +23,18 @@ function StepperInfo() {
   const [activeStep, setActiveStep] = useState(0);
   const [apartments, setApartments] = useState(null);
   // Sets the default state to the first complex in the firebase collection
-  const [complexSelected, setComplexSelected] = useState(0);
+  const [complexSelected, setComplexSelected] = useState('');
   // Sets the default state to 0 since the apartments haven't been fetched when the component renders, but when complex is selected
   const [apartmentSelected, setApartmentSelected] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openComplexModal, setOpenComplexModal] = useState(false);
+  const [openApartmentModal, setOpenApartmentModal] = useState(false);
   const [complexInputValue, setComplexInputValue] = useState('');
+  const [apartmentInputValue, setApartmentInputValue] = useState('');
   const [complexes, setComplexes] = useState(null);
   const [renderComplexes, setRenderComplexes] = useState(false);
+  const [renderApartments, setRenderApartments] = useState(false);
   const navigate = useNavigate();
 
   const style = {
@@ -46,8 +49,11 @@ function StepperInfo() {
     p: 4,
   };
 
+  // Functions to open and close modals when adding complexes and apartments
   const handleOpenComplexModal = () => setOpenComplexModal(true);
   const handleCloseComplexModal = () => setOpenComplexModal(false);
+  const handleOpenApartmentModal = () => setOpenApartmentModal(true);
+  const handleCloseApartmentModal = () => setOpenApartmentModal(false);
 
   const handleNext = () =>
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -86,16 +92,50 @@ function StepperInfo() {
       .split(' ')
       .join(' ');
 
-    await db
-      .collection('complexes')
-      .doc(formattedComplexString)
-      .set({ name: formattedComplexString })
-      .then(() => {
-        // Turns on variable so useEffect rerenders when complex is added to firebase db and fetches all of them again
-        setRenderComplexes(true);
-        setLoading(false);
-        handleCloseComplexModal();
-      });
+    // Adding new apartment number to collection if input is not empty
+    if (formattedComplexString !== '') {
+      await db
+        .collection('complexes')
+        .doc(formattedComplexString)
+        .set({ name: formattedComplexString, value: formattedComplexString })
+        .then(() => {
+          // Turns on variable so useEffect rerenders when complex is added to firebase db and fetches all of them again
+          setRenderComplexes(true);
+          setLoading(false);
+          handleCloseComplexModal();
+
+          // Clear input after adding complex
+          setComplexInputValue('');
+        });
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const addApartment = async () => {
+    setLoading(true);
+
+    const formattedApartmentString = apartmentInputValue.trim();
+
+    if (formattedApartmentString !== '') {
+      await db
+        .collection('complexes')
+        .doc(complexSelected)
+        .collection(complexSelected)
+        .doc(formattedApartmentString)
+        .set({ apt: formattedApartmentString })
+        .then(() => {
+          // Turns on variable so useEffect rerenders when apartment is added to firebase db and fetches all of them again
+          setRenderApartments(true);
+          setLoading(false);
+          handleCloseApartmentModal();
+
+          // Clear input after adding apartment number
+          setApartmentInputValue('');
+        });
+    } else {
+      setLoading(false);
+    }
   };
 
   const submitComplexAndApartment = async () => {
@@ -132,6 +172,7 @@ function StepperInfo() {
     return words.join(' ');
   };
 
+  // Fetches complexes from Firebase
   useEffect(() => {
     setLoading(true);
     // Turns off variable so useEffect doesn't enter infinite loop of rendering'
@@ -151,23 +192,30 @@ function StepperInfo() {
     // Rerenders everytime complex is added to firebase db
   }, [renderComplexes]);
 
-  // useEffect(() => {
-  //   async function getApartments(complex) {
-  //     const apartmentsSnapshot = await db
-  //       .collection('complexes')
-  //       .doc(complex)
-  //       .collection(complex)
-  //       .get();
-  //     // const apartmentsSnapshot = await getDocs(collection(db, 'cedars'));
-  //     const apartmentsList = apartmentsSnapshot.docs.map((doc) => {
-  //       return { ...doc.data(), id: doc.id };
-  //     });
-  //     setApartments(apartmentsList);
-  //   }
+  useEffect(() => {
+    if (complexSelected) {
+      setLoading(true);
+      setRenderApartments(false);
 
-  //   getApartments(complexSelected);
-  //   // This useEffect will run everytime a complex is selected
-  // }, [complexSelected]);
+      async function getApartments(complex) {
+        const apartmentsSnapshot = await db
+          .collection('complexes')
+          .doc(complex)
+          .collection(complex)
+          .get();
+        // const apartmentsSnapshot = await getDocs(collection(db, 'cedars'));
+        const apartmentsList = apartmentsSnapshot.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        });
+
+        setApartments(apartmentsList);
+        setLoading(false);
+      }
+
+      getApartments(complexSelected);
+    }
+    // This useEffect will run everytime a complex is selected or a new apartment number is added
+  }, [complexSelected, renderApartments]);
 
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>
@@ -209,7 +257,10 @@ function StepperInfo() {
           text="Don't see yours? Add it here"
           className='stepperInfo__btn'
           Icon={AddIcon}
-          onClick={handleOpenComplexModal}
+          // Open modal for complex or apartment, conditionally
+          onClick={
+            activeStep === 0 ? handleOpenComplexModal : handleOpenApartmentModal
+          }
           reverse
         />
 
@@ -277,6 +328,32 @@ function StepperInfo() {
             reverse
             className='modal__btn'
             onClick={addComplex}
+          />
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openApartmentModal}
+        onClose={handleCloseApartmentModal}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <Box sx={style}>
+          <label>Apartment #</label>
+          <input
+            type='text'
+            className='modal__input'
+            placeholder='104'
+            value={apartmentInputValue}
+            onChange={(e) => setApartmentInputValue(e.target.value)}
+          />
+
+          <CustomButton
+            text='Add Apartment'
+            Icon={AddIcon}
+            reverse
+            className='modal__btn'
+            onClick={addApartment}
           />
         </Box>
       </Modal>
