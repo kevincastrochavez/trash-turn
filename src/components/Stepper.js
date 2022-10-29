@@ -8,10 +8,13 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
+import AddIcon from '@mui/icons-material/Add';
 
 import RadioBtn from './RadioBtn';
 import { useStateValue } from '../StateProvider';
 import { db } from '../firebase';
+import CustomButton from './Button';
+import { Modal } from '@mui/material';
 
 const steps = ['Choose your Complex', 'Choose your apartment'];
 
@@ -27,25 +30,38 @@ function StepperInfo() {
   const [apartmentSelected, setApartmentSelected] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openComplexModal, setOpenComplexModal] = useState(false);
+  const [complexInputValue, setComplexInputValue] = useState('');
   const navigate = useNavigate();
 
-  const handleNext = () => {
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 320,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    borderRadius: 2,
+    p: 4,
+  };
+
+  const handleOpenComplexModal = () => setOpenComplexModal(true);
+  const handleCloseComplexModal = () => setOpenComplexModal(false);
+
+  const handleNext = () =>
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
 
-  const handleBack = () => {
+  const handleBack = () =>
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
 
-  const selectComplex = (complex) => {
+  const selectComplex = (complex) =>
     // Sets which radio button was selected for complex
     setComplexSelected(complex.value);
-  };
 
-  const selectApartment = (apartment) => {
+  const selectApartment = (apartment) =>
     // Sets which radio button was selected for apartment
     setApartmentSelected(apartment.apt);
-  };
 
   // Snackbar alert
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -59,6 +75,25 @@ function StepperInfo() {
     }
 
     setShowAlert(false);
+  };
+
+  const addComplex = async () => {
+    setLoading(true);
+
+    const formattedComplexString = complexInputValue
+      .trim()
+      .toLowerCase()
+      .split(' ')
+      .join('');
+
+    await db
+      .collection('complexes')
+      .doc(formattedComplexString)
+      .set({ name: formattedComplexString })
+      .then(() => {
+        setLoading(false);
+        handleCloseComplexModal();
+      });
   };
 
   const submitComplexAndApartment = async () => {
@@ -103,8 +138,6 @@ function StepperInfo() {
     // This useEffect will run everytime a complex is selected
   }, [complexSelected]);
 
-  console.log(user);
-
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -124,7 +157,7 @@ function StepperInfo() {
             ? complexesList &&
               complexesList.map((complex) => (
                 <RadioBtn
-                  callback={() => selectComplex(complex)}
+                  onClick={() => selectComplex(complex)}
                   active={complexSelected === complex.value ? true : false}
                   key={complex.value}
                   label={complex.name}
@@ -133,13 +166,21 @@ function StepperInfo() {
             : apartments &&
               apartments.map((apartment) => (
                 <RadioBtn
-                  callback={() => selectApartment(apartment)}
+                  onClick={() => selectApartment(apartment)}
                   active={apartmentSelected === apartment.apt ? true : false}
                   key={apartment.apt}
                   label={apartment.apt}
                 />
               ))}
         </div>
+
+        <CustomButton
+          text="Don't see yours? Add it here"
+          className='stepperInfo__btn'
+          Icon={AddIcon}
+          onClick={handleOpenComplexModal}
+          reverse
+        />
 
         <Box
           sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
@@ -173,7 +214,7 @@ function StepperInfo() {
           severity='warning'
           sx={{ width: '100%' }}
         >
-          Please select an apartment from the current complex
+          Please select an apartment from the complex selected
         </Alert>
       </Snackbar>
 
@@ -182,6 +223,32 @@ function StepperInfo() {
           <CircularProgress />
         </div>
       )}
+
+      <Modal
+        open={openComplexModal}
+        onClose={handleCloseComplexModal}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <Box sx={style}>
+          <label>Apartment Complex Name</label>
+          <input
+            type='text'
+            className='modal__input'
+            placeholder='Center Square'
+            value={complexInputValue}
+            onChange={(e) => setComplexInputValue(e.target.value)}
+          />
+
+          <CustomButton
+            text='Add Complex'
+            Icon={AddIcon}
+            reverse
+            className='modal__btn'
+            onClick={addComplex}
+          />
+        </Box>
+      </Modal>
     </Box>
   );
 }

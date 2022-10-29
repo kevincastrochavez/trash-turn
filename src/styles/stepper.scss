@@ -1,5 +1,5 @@
 .stepperInfo {
-  margin-top: 24px;
+  padding: 24px 0;
 
   &__container {
     margin-top: 48px;
@@ -7,7 +7,8 @@
     &-btns {
       display: grid;
       gap: 12px;
-      max-height: 60vh;
+      max-height: 50vh;
+      // max-height: 60vh;
       overflow: scroll;
     }
 
@@ -22,6 +23,14 @@
       left: 0;
       padding-top: 0 !important;
     }
+  }
+
+  &__btn {
+    width: 100%;
+    margin-top: 32px;
+    padding: 16px 24px;
+
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   }
 }
 

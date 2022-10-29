@@ -69,11 +69,7 @@ function Login() {
 
         <p>Never take out the trash when you are not supposed to</p>
 
-        <Button
-          callback={signIn}
-          Icon={GoogleIcon}
-          text='Sign In with Google'
-        />
+        <Button onClick={signIn} Icon={GoogleIcon} text='Sign In with Google' />
       </div>
     </div>
   );
