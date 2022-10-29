@@ -31,6 +31,7 @@ function StepperInfo() {
   const [openComplexModal, setOpenComplexModal] = useState(false);
   const [complexInputValue, setComplexInputValue] = useState('');
   const [complexes, setComplexes] = useState(null);
+  const [renderComplexes, setRenderComplexes] = useState(false);
   const navigate = useNavigate();
 
   const style = {
@@ -90,6 +91,8 @@ function StepperInfo() {
       .doc(formattedComplexString)
       .set({ name: formattedComplexString })
       .then(() => {
+        // Turns on variable so useEffect rerenders when complex is added to firebase db and fetches all of them again
+        setRenderComplexes(true);
         setLoading(false);
         handleCloseComplexModal();
       });
@@ -131,6 +134,8 @@ function StepperInfo() {
 
   useEffect(() => {
     setLoading(true);
+    // Turns off variable so useEffect doesn't enter infinite loop of rendering'
+    setRenderComplexes(false);
 
     async function getComplexes() {
       const complexesSnapshot = await db.collection('complexes').get();
@@ -143,7 +148,8 @@ function StepperInfo() {
     }
 
     getComplexes();
-  }, []);
+    // Rerenders everytime complex is added to firebase db
+  }, [renderComplexes]);
 
   // useEffect(() => {
   //   async function getApartments(complex) {
