@@ -8,7 +8,6 @@ import { useStateValue } from '../StateProvider';
 import Button from '../components/Button';
 
 function Login() {
-  const [complexes, setComplexes] = useState(null);
   const [loginClass, setLoginClass] = useState('loginStart');
   const [{}, dispatch] = useStateValue();
   const navigate = useNavigate();
@@ -17,20 +16,6 @@ function Login() {
     // Changing the css class on login so it performs the animation
     setLoginClass('loginStill');
   }, 1000);
-
-  // Gets the complexes from firebase so they are fetched early in the app
-  useEffect(() => {
-    async function getComplexes() {
-      const complexesSnapshot = await db.collection('complexes').get();
-      const complexesList = complexesSnapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id };
-      });
-
-      setComplexes(complexesList);
-    }
-
-    getComplexes();
-  }, []);
 
   // Signs in user with the Google provider
   const signIn = () => {
@@ -46,11 +31,6 @@ function Login() {
       dispatch({
         type: 'SET_USER',
         user: user,
-      });
-
-      dispatch({
-        type: 'SET_COMPLEXES',
-        complexes: complexes,
       });
 
       // Redirects to different page
@@ -69,11 +49,7 @@ function Login() {
 
         <p>Never take out the trash when you are not supposed to</p>
 
-        <Button
-          callback={signIn}
-          Icon={GoogleIcon}
-          text='Sign In with Google'
-        />
+        <Button onClick={signIn} Icon={GoogleIcon} text='Sign In with Google' />
       </div>
     </div>
   );

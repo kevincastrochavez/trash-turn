@@ -10,4 +10,8 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
+
+  &__reverse {
+    flex-direction: row-reverse;
+  }
 }
