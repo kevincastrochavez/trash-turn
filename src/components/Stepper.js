@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -6,6 +7,7 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import RadioBtn from './RadioBtn';
 import { useStateValue } from '../StateProvider';
@@ -24,6 +26,8 @@ function StepperInfo() {
   // Sets the default state to 0 since the apartments haven't been fetched when the component renders, but when complex is selected
   const [apartmentSelected, setApartmentSelected] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -59,6 +63,8 @@ function StepperInfo() {
 
   const submitComplexAndApartment = async () => {
     if (apartmentSelected) {
+      setLoading(true);
+
       // Create collection of rommates inside apartment and assign user to it
       await db
         .collection('complexes')
@@ -66,7 +72,13 @@ function StepperInfo() {
         .collection(complexSelected)
         .doc(apartmentSelected)
         .collection('roomates')
-        .add(user);
+        .add(user)
+        .then(() => {
+          setLoading(false);
+
+          // Redirect to root page
+          navigate('/');
+        });
     } else {
       // If no apartment was selected, alert will be fired
       setShowAlert(true);
@@ -164,6 +176,12 @@ function StepperInfo() {
           Please select an apartment from the current complex
         </Alert>
       </Snackbar>
+
+      {loading && (
+        <div className='loading'>
+          <CircularProgress />
+        </div>
+      )}
     </Box>
   );
 }
