@@ -138,9 +138,23 @@ function StepperInfo() {
     }
   };
 
+  console.log(complexSelected);
+  console.log(apartmentSelected);
+
   const submitComplexAndApartment = async () => {
     if (apartmentSelected) {
       setLoading(true);
+
+      db.collection('users').doc(user.uid).set(
+        {
+          name: user.name,
+          photoUrl: user.photoUrl,
+          uid: user.uid,
+          complex: complexSelected,
+          apartment: apartmentSelected,
+        },
+        { merge: true }
+      );
 
       // Create collection of rommates inside apartment and assign user to it
       await db
