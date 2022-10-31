@@ -138,9 +138,6 @@ function StepperInfo() {
     }
   };
 
-  console.log(complexSelected);
-  console.log(apartmentSelected);
-
   const submitComplexAndApartment = async () => {
     if (apartmentSelected) {
       setLoading(true);
