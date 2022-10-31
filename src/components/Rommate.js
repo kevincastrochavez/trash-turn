@@ -3,9 +3,9 @@ import React from 'react';
 function Roomate({ photoUrl, name }) {
   return (
     <div className='roomate'>
-      <img src={photoUrl} alt={photoUrl} />
+      <img src={photoUrl} alt={`${name} profile`} />
 
-      <p>{name}</p>
+      <h4>{name}</h4>
     </div>
   );
 }

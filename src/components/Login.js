@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useNavigate } from 'react-router-dom';
@@ -27,13 +27,25 @@ function Login() {
         uid: result.user.uid,
       };
 
-      // Dispatches user to the context layer
-      dispatch({
-        type: 'SET_USER',
-        user: user,
-      });
+      db.collection('users')
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            // Dispatches user to the context layer, whether is a new user or one with complex and apartment already assigned
+            dispatch({
+              type: 'SET_USER',
+              user: doc.data(),
+            });
+          } else {
+            dispatch({
+              type: 'SET_USER',
+              user: user,
+            });
+          }
+        });
 
-      // Redirects to different page
+      // Redirects to page to assign complex and apartment
       navigate('/rommateInfo');
     });
   };
