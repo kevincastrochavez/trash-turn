@@ -34,8 +34,8 @@ function Login() {
           if (doc.exists) {
             // Dispatches user to the context layer, whether is a new user or one with complex and apartment already assigned
             dispatch({
-              type: 'SET_USER',
-              user: doc.data(),
+              type: 'SET_FULL_USER',
+              fullUser: doc.data(),
             });
           } else {
             dispatch({

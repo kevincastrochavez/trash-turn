@@ -1,5 +1,6 @@
 export const initialState = {
-  user: null,
+  user: {},
+  fullUser: {},
 };
 
 const reducer = (state, action) => {
@@ -8,6 +9,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         user: action.user,
+      };
+    case 'SET_FULL_USER':
+      return {
+        ...state,
+        fullUser: action.fullUser,
       };
 
     default:

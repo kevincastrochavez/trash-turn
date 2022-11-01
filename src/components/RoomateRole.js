@@ -10,26 +10,30 @@ function RoomateRole() {
   const [roomates, setRoomates] = useState([]);
 
   useEffect(() => {
-    db.collection('complexes')
-      .doc(user.complex)
-      .collection(user.complex)
-      .doc(user.apartment)
-      .collection('roomates')
-      .get()
-      .then((snapshot) => {
-        const roomates = [];
-        snapshot.forEach((doc) => roomates.push(doc.data()));
+    console.log(user);
 
-        setRoomates(roomates);
-      });
+    if (roomates) {
+      db.collection('complexes')
+        .doc(user.complex)
+        .collection(user.complex)
+        .doc(user.apartment)
+        .collection('roomates')
+        .get()
+        .then((snapshot) => {
+          const roomates = [];
+          snapshot.forEach((doc) => roomates.push(doc.data()));
+
+          setRoomates(roomates);
+        });
+    }
   }, []);
 
   return (
     <div className='roomateRole'>
       <h1>Roomates</h1>
 
-      {roomates.map((roomate) => (
-        <Roomate name={roomate.name} photoUrl={roomate.photoUrl} />
+      {roomates.map((roomate, index) => (
+        <Roomate key={index} name={roomate.name} photoUrl={roomate.photoUrl} />
       ))}
     </div>
   );
