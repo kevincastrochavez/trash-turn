@@ -1,8 +1,6 @@
 export const initialState = {
   user: null,
-  complexesList: [],
-  complexChosen: '',
-  apartmentChosen: '',
+  fullUser: null,
 };
 
 const reducer = (state, action) => {
@@ -12,20 +10,10 @@ const reducer = (state, action) => {
         ...state,
         user: action.user,
       };
-    case 'SET_COMPLEXES':
+    case 'SET_FULL_USER':
       return {
         ...state,
-        complexesList: action.complexes,
-      };
-    case 'SET_COMPLEX_CHOSEN':
-      return {
-        ...state,
-        complexChosen: action.complex,
-      };
-    case 'SET_APARTMENT_CHOSEN':
-      return {
-        ...state,
-        apartmentChosen: action.apartment,
+        fullUser: action.fullUser,
       };
 
     default:

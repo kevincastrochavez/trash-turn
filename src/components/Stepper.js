@@ -19,7 +19,7 @@ import { Modal } from '@mui/material';
 const steps = ['Choose your Complex', 'Choose your apartment'];
 
 function StepperInfo() {
-  const [{ user }] = useStateValue();
+  const [{ user }, dispatch] = useStateValue();
   const [activeStep, setActiveStep] = useState(0);
   const [apartments, setApartments] = useState(null);
   // Sets the default state to the first complex in the firebase collection
@@ -141,6 +141,20 @@ function StepperInfo() {
   const submitComplexAndApartment = async () => {
     if (apartmentSelected) {
       setLoading(true);
+      const userObject = {
+        name: user.name,
+        photoUrl: user.photoUrl,
+        uid: user.uid,
+        complex: complexSelected,
+        apartment: apartmentSelected,
+      };
+
+      dispatch({
+        type: 'SET_FULL_USER',
+        fullUser: userObject,
+      });
+
+      db.collection('users').doc(user.uid).set(userObject, { merge: true });
 
       // Create collection of rommates inside apartment and assign user to it
       await db
