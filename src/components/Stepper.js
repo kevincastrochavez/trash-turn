@@ -19,7 +19,7 @@ import { Modal } from '@mui/material';
 const steps = ['Choose your Complex', 'Choose your apartment'];
 
 function StepperInfo() {
-  const [{ user, fullUser }, dispatch] = useStateValue();
+  const [{ user }, dispatch] = useStateValue();
   const [activeStep, setActiveStep] = useState(0);
   const [apartments, setApartments] = useState(null);
   // Sets the default state to the first complex in the firebase collection
@@ -141,17 +141,20 @@ function StepperInfo() {
   const submitComplexAndApartment = async () => {
     if (apartmentSelected) {
       setLoading(true);
+      const userObject = {
+        name: user.name,
+        photoUrl: user.photoUrl,
+        uid: user.uid,
+        complex: complexSelected,
+        apartment: apartmentSelected,
+      };
 
-      db.collection('users').doc(user.uid).set(
-        {
-          name: user.name,
-          photoUrl: user.photoUrl,
-          uid: user.uid,
-          complex: complexSelected,
-          apartment: apartmentSelected,
-        },
-        { merge: true }
-      );
+      dispatch({
+        type: 'SET_FULL_USER',
+        fullUser: userObject,
+      });
+
+      db.collection('users').doc(user.uid).set(userObject, { merge: true });
 
       // Create collection of rommates inside apartment and assign user to it
       await db
@@ -164,14 +167,8 @@ function StepperInfo() {
         .then(() => {
           setLoading(false);
 
-          dispatch({
-            type: 'REMOVE_USER',
-          });
-
-          console.log(user);
-
           // Redirect to root page
-          // navigate('/');
+          navigate('/');
         });
     } else {
       // If no apartment was selected, alert will be fired
@@ -233,9 +230,6 @@ function StepperInfo() {
     }
     // This useEffect will run everytime a complex is selected or a new apartment number is added
   }, [complexSelected, renderApartments]);
-
-  console.log(user);
-  console.log(fullUser);
 
   return (
     <Box sx={{ width: '100%' }} className='stepperInfo'>

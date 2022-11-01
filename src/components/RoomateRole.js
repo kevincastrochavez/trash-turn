@@ -6,17 +6,15 @@ import { useStateValue } from '../StateProvider';
 import Roomate from './Rommate';
 
 function RoomateRole() {
-  const [{ user }] = useStateValue();
+  const [{ fullUser }] = useStateValue();
   const [roomates, setRoomates] = useState([]);
 
   useEffect(() => {
-    console.log(user);
-
     if (roomates) {
       db.collection('complexes')
-        .doc(user.complex)
-        .collection(user.complex)
-        .doc(user.apartment)
+        .doc(fullUser.complex)
+        .collection(fullUser.complex)
+        .doc(fullUser.apartment)
         .collection('roomates')
         .get()
         .then((snapshot) => {
