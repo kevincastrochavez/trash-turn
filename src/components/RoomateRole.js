@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useEffect } from 'react';
 import { db } from '../firebase';
 
@@ -8,6 +9,10 @@ import Roomate from './Rommate';
 function RoomateRole() {
   const [{ fullUser }] = useStateValue();
   const [roomates, setRoomates] = useState([]);
+
+  const onDragEnd = () => {
+    console.log('Something happened');
+  };
 
   useEffect(() => {
     if (roomates) {
@@ -28,11 +33,29 @@ function RoomateRole() {
 
   return (
     <div className='roomateRole'>
-      <h1>Roomates</h1>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <h1>Roomates</h1>
 
-      {roomates.map((roomate, index) => (
-        <Roomate key={index} name={roomate.name} photoUrl={roomate.photoUrl} />
-      ))}
+        <Droppable droppableId='1'>
+          {(provided) => (
+            <div
+              className='roomateRole__container'
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {roomates.map((roomate, index) => (
+                <Roomate
+                  key={index}
+                  index={index}
+                  id={roomate.uid}
+                  name={roomate.name}
+                  photoUrl={roomate.photoUrl}
+                />
+              ))}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }

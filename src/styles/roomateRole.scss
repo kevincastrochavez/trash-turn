@@ -1,9 +1,11 @@
 .roomateRole {
-  display: grid;
-  gap: 12px;
-
   & h1 {
     font-size: $h1-size;
     margin-bottom: 24px;
+  }
+
+  &__container {
+    display: grid;
+    gap: 12px;
   }
 }
