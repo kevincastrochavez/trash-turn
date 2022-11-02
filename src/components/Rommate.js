@@ -10,9 +10,9 @@ function Roomate({ index, id, name, photoUrl }) {
       {(provided) => (
         <div
           className='roomate'
+          ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          ref={provided.innerRef}
         >
           <DragIndicatorIcon />
 
