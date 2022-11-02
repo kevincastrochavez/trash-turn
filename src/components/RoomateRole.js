@@ -47,7 +47,7 @@ function RoomateRole() {
           setShowAlert(true);
         });
     } else {
-      setAlertMessage("You cannot move your roomate's card");
+      setAlertMessage("You cannot drag your roomate's card");
       setShowAlert(true);
       setLoading(false);
     }
@@ -106,7 +106,7 @@ function RoomateRole() {
         <Alert
           onClose={handleCloseAlert}
           severity={
-            alertMessage === "You cannot move your roomate's card"
+            alertMessage === "You cannot drag your roomate's card"
               ? 'warning'
               : 'success'
           }
