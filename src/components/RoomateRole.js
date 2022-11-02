@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Snackbar } from '@mui/material';
 import { useEffect } from 'react';
+import MuiAlert from '@mui/material/Alert';
 import moment from 'moment';
 
 import { db } from '../firebase';
@@ -12,18 +13,45 @@ function RoomateRole() {
   const [{ fullUser }] = useStateValue();
   const [roomates, setRoomates] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+
+  // Snackbar alert
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+  });
+
+  // Close alert
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShowAlert(false);
+  };
 
   const onDragEnd = (e) => {
     setLoading(true);
 
-    db.collection('complexes')
-      .doc(fullUser.complex)
-      .collection(fullUser.complex)
-      .doc(fullUser.apartment)
-      .collection('roomates')
-      .doc(e.draggableId)
-      .update({ timestamp: moment(new Date()).format('MMMM DD, h:mm:ss a') })
-      .then(() => setLoading(false));
+    if (fullUser.uid === e.draggableId) {
+      db.collection('complexes')
+        .doc(fullUser.complex)
+        .collection(fullUser.complex)
+        .doc(fullUser.apartment)
+        .collection('roomates')
+        .doc(e.draggableId)
+        .update({ timestamp: moment(new Date()).format('MMMM DD, h:mm:ss a') })
+        .then(() => {
+          setLoading(false);
+          setAlertMessage('Thanks for taking the trash out!');
+          setShowAlert(true);
+        });
+    } else {
+      setAlertMessage("You cannot move your roomate's card");
+      console.log('Not equal');
+      setShowAlert(true);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -71,6 +99,24 @@ function RoomateRole() {
           )}
         </Droppable>
       </DragDropContext>
+
+      <Snackbar
+        open={showAlert}
+        // autoHideDuration={4000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity={
+            alertMessage === "You cannot move your roomate's card"
+              ? 'warning'
+              : 'success'
+          }
+          sx={{ width: '100%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
 
       {loading && (
         <div className='loading'>
