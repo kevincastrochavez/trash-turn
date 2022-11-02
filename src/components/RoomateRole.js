@@ -10,8 +10,8 @@ function RoomateRole() {
   const [{ fullUser }] = useStateValue();
   const [roomates, setRoomates] = useState([]);
 
-  const onDragEnd = () => {
-    console.log('Something happened');
+  const onDragEnd = (e) => {
+    console.log(e);
   };
 
   useEffect(() => {
@@ -33,7 +33,7 @@ function RoomateRole() {
 
   return (
     <div className='roomateRole'>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
         <h1>Roomates</h1>
 
         <Droppable droppableId='1'>
