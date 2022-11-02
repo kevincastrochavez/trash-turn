@@ -18,7 +18,7 @@ function Roomate({ index, id, name, photoUrl, timestamp }) {
 
           <div>
             <h4>{name}</h4>
-            <p>Last time thrown: {timestamp}</p>
+            <p>Last time: {timestamp}</p>
           </div>
         </div>
       )}

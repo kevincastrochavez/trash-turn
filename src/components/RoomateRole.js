@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { CircularProgress } from '@mui/material';
 import { useEffect } from 'react';
+import moment from 'moment';
 
 import { db } from '../firebase';
 import { useStateValue } from '../StateProvider';
@@ -9,9 +11,19 @@ import Roomate from './Roomate';
 function RoomateRole() {
   const [{ fullUser }] = useStateValue();
   const [roomates, setRoomates] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const onDragEnd = (e) => {
-    console.log(e.draggableId);
+    setLoading(true);
+
+    db.collection('complexes')
+      .doc(fullUser.complex)
+      .collection(fullUser.complex)
+      .doc(fullUser.apartment)
+      .collection('roomates')
+      .doc(e.draggableId)
+      .update({ timestamp: moment(new Date()).format('MMMM DD, h:mm:ss a') })
+      .then(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -21,15 +33,17 @@ function RoomateRole() {
         .collection(fullUser.complex)
         .doc(fullUser.apartment)
         .collection('roomates')
+        .orderBy('timestamp', 'asc')
         .get()
         .then((snapshot) => {
           const roomates = [];
           snapshot.forEach((doc) => roomates.push(doc.data()));
+          console.log(roomates);
 
           setRoomates(roomates);
         });
     }
-  }, []);
+  }, [loading]);
 
   return (
     <div className='roomateRole'>
@@ -57,6 +71,12 @@ function RoomateRole() {
           )}
         </Droppable>
       </DragDropContext>
+
+      {loading && (
+        <div className='loading'>
+          <CircularProgress />
+        </div>
+      )}
     </div>
   );
 }

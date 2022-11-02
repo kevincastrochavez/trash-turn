@@ -141,7 +141,7 @@ function StepperInfo() {
 
   const submitComplexAndApartment = async () => {
     if (apartmentSelected) {
-      const formattedDate = moment(new Date()).format('MMM Do, h:mm a');
+      const formattedDate = moment(new Date()).format('MMMM DD, h:mm:ss a');
       setLoading(true);
 
       const userObject = {
@@ -167,7 +167,8 @@ function StepperInfo() {
         .collection(complexSelected)
         .doc(apartmentSelected)
         .collection('roomates')
-        .add(userObject)
+        .doc(userObject.uid)
+        .set(userObject)
         .then(() => {
           setLoading(false);
 
