@@ -9,6 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
+import moment from 'moment';
 
 import RadioBtn from './RadioBtn';
 import { useStateValue } from '../StateProvider';
@@ -140,13 +141,16 @@ function StepperInfo() {
 
   const submitComplexAndApartment = async () => {
     if (apartmentSelected) {
+      const formattedDate = moment(new Date()).format('MMM Do, h:mm a');
       setLoading(true);
+
       const userObject = {
         name: user.name,
         photoUrl: user.photoUrl,
         uid: user.uid,
         complex: complexSelected,
         apartment: apartmentSelected,
+        timestamp: formattedDate,
       };
 
       dispatch({
@@ -163,7 +167,7 @@ function StepperInfo() {
         .collection(complexSelected)
         .doc(apartmentSelected)
         .collection('roomates')
-        .add(user)
+        .add(userObject)
         .then(() => {
           setLoading(false);
 

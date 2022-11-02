@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useEffect } from 'react';
-import { db } from '../firebase';
 
+import { db } from '../firebase';
 import { useStateValue } from '../StateProvider';
 import Roomate from './Roomate';
 
@@ -50,6 +50,7 @@ function RoomateRole() {
                   id={roomate.uid}
                   name={roomate.name}
                   photoUrl={roomate.photoUrl}
+                  timestamp={roomate.timestamp}
                 />
               ))}
             </div>

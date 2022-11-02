@@ -2,7 +2,7 @@ import React from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Draggable } from 'react-beautiful-dnd';
 
-function Roomate({ index, id, name, photoUrl }) {
+function Roomate({ index, id, name, photoUrl, timestamp }) {
   return (
     <Draggable draggableId={`${id}`} index={index}>
       {(provided) => (
@@ -18,7 +18,7 @@ function Roomate({ index, id, name, photoUrl }) {
 
           <div>
             <h4>{name}</h4>
-            <p>Last time thrown:</p>
+            <p>Last time thrown: {timestamp}</p>
           </div>
         </div>
       )}
