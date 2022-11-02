@@ -48,7 +48,6 @@ function RoomateRole() {
         });
     } else {
       setAlertMessage("You cannot move your roomate's card");
-      console.log('Not equal');
       setShowAlert(true);
       setLoading(false);
     }
@@ -66,7 +65,6 @@ function RoomateRole() {
         .then((snapshot) => {
           const roomates = [];
           snapshot.forEach((doc) => roomates.push(doc.data()));
-          console.log(roomates);
 
           setRoomates(roomates);
         });
@@ -102,7 +100,7 @@ function RoomateRole() {
 
       <Snackbar
         open={showAlert}
-        // autoHideDuration={4000}
+        autoHideDuration={3000}
         onClose={handleCloseAlert}
       >
         <Alert

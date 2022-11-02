@@ -28,6 +28,7 @@ function StepperInfo() {
   // Sets the default state to 0 since the apartments haven't been fetched when the component renders, but when complex is selected
   const [apartmentSelected, setApartmentSelected] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [openComplexModal, setOpenComplexModal] = useState(false);
   const [openApartmentModal, setOpenApartmentModal] = useState(false);
@@ -56,8 +57,14 @@ function StepperInfo() {
   const handleOpenApartmentModal = () => setOpenApartmentModal(true);
   const handleCloseApartmentModal = () => setOpenApartmentModal(false);
 
-  const handleNext = () =>
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const handleNext = () => {
+    if (complexSelected) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    } else {
+      setAlertMessage('Please select a complex');
+      setShowAlert(true);
+    }
+  };
 
   const handleBack = () =>
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -177,6 +184,7 @@ function StepperInfo() {
         });
     } else {
       // If no apartment was selected, alert will be fired
+      setAlertMessage('Please select an apartment from the complex selected');
       setShowAlert(true);
     }
   };
@@ -307,7 +315,7 @@ function StepperInfo() {
 
       <Snackbar
         open={showAlert}
-        // autoHideDuration={4000}
+        autoHideDuration={3000}
         onClose={handleCloseAlert}
       >
         <Alert
@@ -315,7 +323,7 @@ function StepperInfo() {
           severity='warning'
           sx={{ width: '100%' }}
         >
-          Please select an apartment from the complex selected
+          {alertMessage}
         </Alert>
       </Snackbar>
 
