@@ -4,14 +4,14 @@ import { useEffect } from 'react';
 import { db } from '../firebase';
 
 import { useStateValue } from '../StateProvider';
-import Roomate from './Rommate';
+import Roomate from './Roomate';
 
 function RoomateRole() {
   const [{ fullUser }] = useStateValue();
   const [roomates, setRoomates] = useState([]);
 
   const onDragEnd = (e) => {
-    console.log(e);
+    console.log(e.draggableId);
   };
 
   useEffect(() => {

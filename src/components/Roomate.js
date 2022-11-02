@@ -3,8 +3,6 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Draggable } from 'react-beautiful-dnd';
 
 function Roomate({ index, id, name, photoUrl }) {
-  console.log(id);
-
   return (
     <Draggable draggableId={`${id}`} index={index}>
       {(provided) => (
