@@ -118,6 +118,8 @@ function StepperInfo() {
         });
     } else {
       setLoading(false);
+      setAlertMessage('Please type the name of the complex you want to add');
+      setShowAlert(true);
     }
   };
 
@@ -144,6 +146,8 @@ function StepperInfo() {
         });
     } else {
       setLoading(false);
+      setAlertMessage('Please type the number of apartment you want to add');
+      setShowAlert(true);
     }
   };
 
@@ -261,31 +265,35 @@ function StepperInfo() {
       <div className='stepperInfo__container'>
         <div className='stepperInfo__container-btns'>
           {/* Renders radio buttons based on the collection data fetched from firebase */}
-          {activeStep === 0
-            ? complexes &&
-              complexes.map((complex) => (
-                <RadioBtn
-                  onClick={() => selectComplex(complex)}
-                  active={complexSelected === complex.value ? true : false}
-                  key={complex.value}
-                  label={capitalizeEachWord(complex.name)}
-                  Icon={!complex.img && <ApartmentIcon />}
-                  img={complex.img && complex.img}
-                />
-              ))
-            : apartments &&
-              apartments.map((apartment) => (
-                <RadioBtn
-                  onClick={() => selectApartment(apartment)}
-                  active={apartmentSelected === apartment.apt ? true : false}
-                  key={apartment.apt}
-                  label={apartment.apt}
-                />
-              ))}
+          {activeStep === 0 ? (
+            complexes &&
+            complexes.map((complex) => (
+              <RadioBtn
+                onClick={() => selectComplex(complex)}
+                active={complexSelected === complex.value ? true : false}
+                key={complex.value}
+                label={capitalizeEachWord(complex.name)}
+                Icon={!complex.img && <ApartmentIcon />}
+                img={complex.img && complex.img}
+              />
+            ))
+          ) : apartments.length > 0 ? (
+            apartments.map((apartment) => (
+              <RadioBtn
+                onClick={() => selectApartment(apartment)}
+                active={apartmentSelected === apartment.apt ? true : false}
+                key={apartment.apt}
+                label={apartment.apt}
+              />
+            ))
+          ) : (
+            <p>No apartments yet</p>
+          )}
         </div>
 
         <CustomButton
-          text="Don't see yours? Add it"
+          text={activeStep === 0 ? 'Add your complex' : 'Add your apartment'}
+          // text="Don't see yours? Add it"
           className='stepperInfo__btn'
           Icon={AddIcon}
           // Open modal for complex or apartment, conditionally
@@ -346,6 +354,7 @@ function StepperInfo() {
         <Box sx={style}>
           <label>Apartment Complex Name</label>
           <input
+            autoFocus
             type='text'
             className='modal__input'
             placeholder='Center Square'
@@ -372,6 +381,7 @@ function StepperInfo() {
         <Box sx={style}>
           <label>Apartment #</label>
           <input
+            autoFocus
             type='text'
             className='modal__input'
             placeholder='104'

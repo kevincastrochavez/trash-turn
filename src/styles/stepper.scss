@@ -26,11 +26,18 @@
   }
 
   &__btn {
-    width: 100%;
     margin-top: 32px;
     padding: 16px 24px;
 
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    margin-left: auto;
+
+    border: 1px solid #1976d2;
+    background-color: #fff;
+    color: #1976d2;
+
+    // background-color: rgba(0, 0, 0, 0.38);
+    // color: white;
   }
 }
 
