@@ -9,6 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
+import ApartmentIcon from '@mui/icons-material/Apartment';
 import moment from 'moment';
 
 import RadioBtn from './RadioBtn';
@@ -208,6 +209,7 @@ function StepperInfo() {
     async function getComplexes() {
       const complexesSnapshot = await db.collection('complexes').get();
       const complexesList = complexesSnapshot.docs.map((doc) => {
+        console.log(doc.data());
         return { ...doc.data(), id: doc.id };
       });
 
@@ -267,6 +269,8 @@ function StepperInfo() {
                   active={complexSelected === complex.value ? true : false}
                   key={complex.value}
                   label={capitalizeEachWord(complex.name)}
+                  Icon={!complex.img && <ApartmentIcon />}
+                  img={complex.img && complex.img}
                 />
               ))
             : apartments &&
@@ -281,7 +285,7 @@ function StepperInfo() {
         </div>
 
         <CustomButton
-          text="Don't see yours? Add it here"
+          text="Don't see yours? Add it"
           className='stepperInfo__btn'
           Icon={AddIcon}
           // Open modal for complex or apartment, conditionally
