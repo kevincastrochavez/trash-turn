@@ -213,7 +213,6 @@ function StepperInfo() {
     async function getComplexes() {
       const complexesSnapshot = await db.collection('complexes').get();
       const complexesList = complexesSnapshot.docs.map((doc) => {
-        console.log(doc.data());
         return { ...doc.data(), id: doc.id };
       });
 
