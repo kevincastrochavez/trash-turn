@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+# Overview
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is an application that helps you and your roomates to keep a role of who is next taking the trash out
 
-## Available Scripts
+The Trash-Turn application lets you login using Google authentication, choose your current complex and apartment (or add them if they are not listed) and be assigned along to your roomates to a role. The one listed at the top is supposed to take the trash out. Then, if it was your turn, you can drag yourself to the bottom of the role. You cannot drag other roomates' cards, just yours
 
-In the project directory, you can run:
+The purpose of it is to keep a role that everybody can access at any point and wherever they are, keeping track even of the time you took the trash out
 
-### `npm start`
+[Software Demo Video](http://youtube.link.goes.here)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# Web Pages
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Login page: You can sign in using your Google account
+- RoomateInfo: Allows first-time users to choose a complex and apartment (or add them if they are not listed) and be assigned along with theit roomates
+- Root page: Displays all the registered roomates and the role
 
-### `npm test`
+Roote page is protected so user has to login before getting his information
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Development Environment
 
-### `npm run build`
+Technologies I'm using for the application:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- The React framework to build the application
+- Context for state management
+- Firebase Authentication to sign in users
+- Firebase Firestore to store complexes, apartments, roomates and users
+- Firebase Storage to store images and retrieve their url for some apartment complexes' logos
+- Firebase Hosting to host live web application
+- MaterialUI for icons and some components
+- Moment js for date formatting
+- SCSS for styling
+- react-beautiful-dnd for drag and drop functionality
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+React is a component-based JavaScript library or building user interfaces
+You can design simple views for each state in your application, and React will efficiently update and render just the right components when your data changes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Useful Websites
 
-### `npm run eject`
+- [React Doc](https://reactjs.org/docs/getting-started.html)
+- [React Context](https://reactjs.org/docs/context.html)
+- [Firebase v9](https://travis.media/how-to-use-firebase-with-react/)
+- [Firebase Docs](https://firebase.google.com/docs)
+- [Firebase Firestore](https://firebase.google.com/docs/firestore/manage-data/add-data)
+- [Material UI Icons](https://mui.com/material-ui/icons/)
+- [Material Components](https://mui.com/material-ui/)
+- [Momentjs](https://momentjs.com/)
+- [SCSS](https://sass-lang.com/)
+- [react-beautiful-dnd](https://react-beautiful-dnd.netlify.app/?path=/story/single-vertical-list--basic)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# Future Work
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+TODO
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Protect rest of routes
+- Add more feedback for user regarding who is supossed to take the trash out
