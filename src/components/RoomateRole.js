@@ -74,7 +74,7 @@ function RoomateRole() {
   return (
     <div className='roomateRole'>
       <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
-        <h1>Roomates</h1>
+        <h1>Roommates</h1>
 
         <Droppable droppableId='1'>
           {(provided) => (
