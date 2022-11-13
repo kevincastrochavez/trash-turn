@@ -7,6 +7,7 @@ The Trash-Turn application lets you login using Google authentication handled by
 The purpose of it is to keep a role that everybody can access at any point and wherever they are, keeping track even of the time you took the trash out
 
 [Live Demo](https://trash-turn.web.app/login)
+
 [Software Demo Video](https://www.youtube.com/watch?v=Bk5O6ROYecE)
 
 # Cloud Database
